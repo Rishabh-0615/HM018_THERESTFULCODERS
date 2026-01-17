@@ -16,7 +16,7 @@ dotenv.config();
 const TEMP_USERS = {}; 
 
 export const registerWithOtp = TryCatch(async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, mobile, role } = req.body;
 
    
    if (Array.isArray(email) || !validator.isEmail(email)) {
@@ -25,10 +25,22 @@ export const registerWithOtp = TryCatch(async (req, res) => {
     });
   }
 
-  const existingUser = await User.findOne({ email });
+  if (!mobile || !validator.isMobilePhone(mobile)) {
+    return res.status(400).json({
+      message: "Invalid mobile number format",
+    });
+  }
+
+  if (!role || !['customer', 'pharmacist', 'delivery', 'admin'].includes(role)) {
+    return res.status(400).json({
+      message: "Invalid role. Must be customer, pharmacist, delivery, or admin",
+    });
+  }
+
+  const existingUser = await User.findOne({ $or: [{ email }, { mobile }] });
   if (existingUser) {
     return res.status(400).json({
-      message: "An account with this email already exists",
+      message: "An account with this email or mobile number already exists",
     });
   }
 
@@ -37,6 +49,8 @@ export const registerWithOtp = TryCatch(async (req, res) => {
   TEMP_USERS[email] = {
     name,
     password,
+    mobile,
+    role,
     otp,
     expiresAt: Date.now() + 5 * 60 * 1000, // OTP valid for 5 minutes
   };
@@ -100,7 +114,10 @@ export const verifyOtpAndRegister = TryCatch(async (req, res) => {
     const user = await User.create({
       name: tempUser.name,
       email,
+      mobile: tempUser.mobile,
       password: hashPassword,
+      role: tempUser.role,
+      isVerifiedByAdmin: ['pharmacist', 'delivery'].includes(tempUser.role) ? false : undefined
     });
 
     delete TEMP_USERS[email]; //
@@ -128,6 +145,14 @@ export const loginUser=TryCatch(async(req,res)=>{
             message:"Email or Password Incorrect.",
         });
     }
+
+    // Check if pharmacist or delivery user is verified
+    if ((user.role === 'pharmacist' || user.role === 'delivery') && !user.isVerifiedByAdmin) {
+        return res.status(403).json({
+            message: "Your account is pending admin verification. Please wait for approval.",
+        });
+    }
+
     const comaparePassword=await bcrypt.compare(password,user.password);
 
 
@@ -143,7 +168,6 @@ export const loginUser=TryCatch(async(req,res)=>{
     res.json({
         user,
         message:"Logged In",
-
     })
 
 });
