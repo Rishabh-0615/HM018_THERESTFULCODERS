@@ -10,8 +10,7 @@
 > **🏆 PCCOE Hackathon - HM018**  
 > A revolutionary digital pharmacy ecosystem connecting customers, pharmacists, and delivery partners in a seamless, AI-powered workflow.
 
-![NexPharma Banner](![WhatsApp Image 2026-01-18 at 00 50 23](https://github.com/user-attachments/assets/8c4e6f79-b434-420a-a089-375af8cc4263)
-)
+[WhatsApp Image 2026-01-18 at 00 50 23](https://github.com/user-attachments/assets/8c4e6f79-b434-420a-a089-375af8cc4263)
 
 ---
 
