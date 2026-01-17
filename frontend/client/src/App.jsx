@@ -3,10 +3,20 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import { UserData } from "./context/UserContext";
+import { UserDataDhruv } from "./context/UserContext.dhruv";
 import { Loading } from "./components/Loading";
 import Forgot from "./pages/Forgot";
 import Reset from "./pages/Reset";
 import OtpVerify from "./pages/OtpVerify";
+
+// Dhruv's pages
+import HomeDhruv from "./pages/Home.dhruv";
+import LoginDhruv from "./pages/Login.dhruv";
+import RegisterDhruv from "./pages/Register.dhruv";
+import PrescriptionListDhruv from "./pages/PrescriptionList.dhruv";
+import PrescriptionOrderDhruv from "./pages/PrescriptionOrder.dhruv";
+import CheckoutDhruv from "./pages/Checkout.Dhruv";
+import OrdersDhruv from "./pages/Orders.dhruv";
 import PharmacistDashboardPratik from "./pages/PharmacistDashboard.pratik";
 import MedicinesListPratik from "./pages/MedicinesList.pratik";
 import AddMedicinePratik from "./pages/AddMedicine.pratik";
@@ -32,7 +42,12 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
 };
 
 const App = () => {
-  const { loading, isAuth, user} = UserData(); 
+  // Original context for team routes
+  const { loading, isAuth, user } = UserData(); 
+  
+  // Dhruv's context for customer portal routes
+  const { loading: loadingDhruv, isAuth: isAuthDhruv } = UserDataDhruv();
+  
   
   // Redirect authenticated users based on role
   const getHomeRedirect = () => {
@@ -45,13 +60,15 @@ const App = () => {
     return <Home />;
   };
   
+  
   return (
     <>
-      {loading ? (
+      {(loading || loadingDhruv) ? (
         <Loading />
       ) : (
         <BrowserRouter>
           <Routes>
+            {/* Main Routes */}
             <Route path="/" element={getHomeRedirect()} />          
             
             <Route path="/login" element={!isAuth ? <Login /> : getHomeRedirect()} />
@@ -126,6 +143,36 @@ const App = () => {
                   <OrderDetailPratik />
                 </ProtectedRoute>
               } 
+            />
+            
+            {/* Dhruv's Customer Portal Routes */}
+            <Route 
+              path="/dhruv/login" 
+              element={!isAuthDhruv ? <LoginDhruv /> : <Navigate to="/dhruv/home" />} 
+            />
+            <Route 
+              path="/dhruv/register" 
+              element={!isAuthDhruv ? <RegisterDhruv /> : <Navigate to="/dhruv/home" />} 
+            />
+            <Route 
+              path="/dhruv/home" 
+              element={isAuthDhruv ? <HomeDhruv /> : <Navigate to="/dhruv/login" />} 
+            />
+            <Route 
+              path="/dhruv/prescriptions" 
+              element={isAuthDhruv ? <PrescriptionListDhruv /> : <Navigate to="/dhruv/login" />} 
+            />
+            <Route 
+              path="/dhruv/prescription/:prescriptionId" 
+              element={isAuthDhruv ? <PrescriptionOrderDhruv /> : <Navigate to="/dhruv/login" />} 
+            />
+            <Route 
+              path="/dhruv/checkout" 
+              element={isAuthDhruv ? <CheckoutDhruv /> : <Navigate to="/dhruv/login" />} 
+            />
+            <Route 
+              path="/dhruv/orders" 
+              element={isAuthDhruv ? <OrdersDhruv /> : <Navigate to="/dhruv/login" />} 
             />
           </Routes>
         </BrowserRouter>
