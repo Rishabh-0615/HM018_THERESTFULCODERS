@@ -112,7 +112,7 @@ graph TB
 - 📷 **Tesseract.js** - OCR for image processing
 - 📄 **pdf-parse** - PDF text extraction
 
-### **DevOps & Tools**
+### **DevOps & Tools** (For scaling in future)
 
 - 🐳 **Docker** (Optional) - Containerization
 - 📦 **Nodemon** - Development server
