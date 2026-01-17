@@ -27,8 +27,8 @@ const PharmacistDashboard = () => {
       const { data } = await axios.get("/api/prescriptions/pending/all");
       setPrescriptions(data.prescriptions);
       setLoading(false);
-    } catch (error) {
-      console.error(error);
+    } catch {
+      console.error("Error fetching prescriptions:");
       setLoading(false);
     }
   };
@@ -42,7 +42,7 @@ const PharmacistDashboard = () => {
       alert(`Prescription ${status} successfully`);
       fetchPendingPrescriptions();
     } catch (error) {
-      alert("Action failed");
+      console.error("Action failed:", error);
     }
   };
 

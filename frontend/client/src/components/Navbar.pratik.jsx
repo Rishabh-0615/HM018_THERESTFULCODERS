@@ -1,10 +1,20 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { UserData } from '../context/UserContext';
-import { motion } from 'framer-motion';
-import { FaUser, FaSignOutAlt, FaPills, FaChartLine, FaBars, FaTimes, FaShoppingCart, FaBoxes, FaPlus } from 'react-icons/fa';
-import axios from 'axios';
-import { toast } from 'react-toastify';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { UserData } from "../context/UserContext";
+import { motion } from "framer-motion";
+import {
+  FaUser,
+  FaSignOutAlt,
+  FaPills,
+  FaChartLine,
+  FaBars,
+  FaTimes,
+  FaShoppingCart,
+  FaBoxes,
+  FaPlus,
+} from "react-icons/fa";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const NavbarPratik = () => {
   const { user, setIsAuth, setUser } = UserData();
@@ -13,26 +23,49 @@ const NavbarPratik = () => {
 
   const handleLogout = async () => {
     try {
-      const { data } = await axios.get('/api/user/logout');
+      const { data } = await axios.get("/api/user/logout");
       toast.success(data.message);
       setIsAuth(false);
       setUser(null);
-      navigate('/login');
+      navigate("/login");
     } catch (error) {
-      toast.error('Logout failed');
+      toast.error("Logout failed");
     }
   };
 
-  const navLinks = user?.role === 'pharmacist' ? [
-    { name: 'Dashboard', path: '/pharmacist/dashboard', icon: <FaChartLine /> },
-    { name: 'Medicines', path: '/pharmacist/medicines.pratik', icon: <FaPills /> },
-    { name: 'Add Medicine', path: '/pharmacist/add-medicine.pratik', icon: <FaPlus /> },
-    { name: 'Orders', path: '/pharmacist/orders.pratik', icon: <FaShoppingCart /> },
-    { name: 'Inventory', path: '/pharmacist/inventory.pratik', icon: <FaBoxes /> },
-  ] : [
-    { name: 'Home', path: '/', icon: <FaPills /> },
-    { name: 'Medicines', path: '/medicines.pratik', icon: <FaPills /> },
-  ];
+  const navLinks =
+    user?.role === "pharmacist"
+      ? [
+          {
+            name: "Dashboard",
+            path: "/pharmacist/dashboard",
+            icon: <FaChartLine />,
+          },
+          {
+            name: "Medicines",
+            path: "/pharmacist/medicines.pratik",
+            icon: <FaPills />,
+          },
+          {
+            name: "Add Medicine",
+            path: "/pharmacist/add-medicine.pratik",
+            icon: <FaPlus />,
+          },
+          {
+            name: "Orders",
+            path: "/pharmacist/orders.pratik",
+            icon: <FaShoppingCart />,
+          },
+          {
+            name: "Inventory",
+            path: "/pharmacist/inventory.pratik",
+            icon: <FaBoxes />,
+          },
+        ]
+      : [
+          { name: "Home", path: "/", icon: <FaPills /> },
+          { name: "Medicines", path: "/medicines.pratik", icon: <FaPills /> },
+        ];
 
   return (
     <nav className="bg-[#FCFCFE] border-b border-[#C7C9CE] shadow-sm sticky top-0 z-50">
@@ -41,7 +74,7 @@ const NavbarPratik = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
             <span className="text-2xl font-bold text-[#055AF9]">PROIMG</span>
-            {user?.role === 'pharmacist' && (
+            {user?.role === "pharmacist" && (
               <span className="hidden sm:block px-2 py-1 bg-[#055AF9] text-white text-xs rounded-full">
                 Pharmacist
               </span>
@@ -67,7 +100,9 @@ const NavbarPratik = () => {
             <div className="flex items-center space-x-2 px-3 py-2 bg-[#F0F3FB] rounded-lg">
               <FaUser className="text-[#055AF9]" />
               <div className="flex flex-col">
-                <span className="text-sm font-medium text-[#343838]">{user?.name}</span>
+                <span className="text-sm font-medium text-[#343838]">
+                  {user?.name}
+                </span>
                 <span className="text-xs text-[#7F7E85]">{user?.email}</span>
               </div>
             </div>
@@ -95,7 +130,7 @@ const NavbarPratik = () => {
         {isMenuOpen && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
+            animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             className="md:hidden py-4 border-t border-[#C7C9CE]"
           >
@@ -103,9 +138,11 @@ const NavbarPratik = () => {
             <div className="flex items-center space-x-3 px-4 py-3 bg-[#F0F3FB] rounded-lg mb-4">
               <FaUser className="text-[#055AF9] text-xl" />
               <div>
-                <p className="text-sm font-medium text-[#343838]">{user?.name}</p>
+                <p className="text-sm font-medium text-[#343838]">
+                  {user?.name}
+                </p>
                 <p className="text-xs text-[#7F7E85]">{user?.email}</p>
-                {user?.role === 'pharmacist' && (
+                {user?.role === "pharmacist" && (
                   <span className="inline-block mt-1 px-2 py-1 bg-[#055AF9] text-white text-xs rounded-full">
                     Pharmacist
                   </span>
