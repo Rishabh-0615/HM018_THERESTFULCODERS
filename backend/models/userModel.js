@@ -8,15 +8,15 @@ const schema = new mongoose.Schema(
     password: { type: String, required: true },
     role: {
       type: String,
-      enum: ["customer", "pharmacist", "delivery", "admin"],
+      enum: ["customer", "pharmacist"],
       required: true
     },
     location: { type: String, default: "" },
     isVerifiedByAdmin: {
       type: Boolean,
-      default:false,
+      default: false,
       required: function() {
-        return this.role === 'pharmacist' || this.role === 'delivery';
+        return this.role === 'pharmacist';
       }
     }
   },
@@ -24,7 +24,7 @@ const schema = new mongoose.Schema(
 );
 
 schema.pre('save', function(next) {
-  if (this.role !== 'pharmacist' && this.role !== 'delivery') { 
+  if (this.role !== 'pharmacist') { 
     this.isVerifiedByAdmin = undefined; 
   }
   next();

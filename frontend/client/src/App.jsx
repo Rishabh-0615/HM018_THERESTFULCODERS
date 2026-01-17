@@ -5,15 +5,43 @@ import Register from "./pages/Register";
 import Forgot from "./pages/Forgot";
 import Reset from "./pages/Reset";
 import OtpVerify from "./pages/OtpVerify";
-import UploadPrescription from "./pages/UploadPrescription";
-import PharmacistDashboard from "./pages/PharmacistDashboard";
-import MyPrescriptions from "./pages/MyPrescriptions";
-import { UserData } from "./context/UserContext";
-import { Loading } from "./components/Loading";
+import PharmacistDashboardPratik from "./pages/PharmacistDashboard.pratik";
+import MedicinesListPratik from "./pages/MedicinesList.pratik";
+import AddMedicinePratik from "./pages/AddMedicine.pratik";
+import EditMedicinePratik from "./pages/EditMedicine.pratik";
+import MedicineDetailPratik from "./pages/MedicineDetail.pratik";
+import InventoryPratik from "./pages/Inventory.pratik";
+import OrdersPratik from "./pages/Orders.pratik";
+import OrderDetailPratik from "./pages/OrderDetail.pratik";
+
+// Protected Route Component
+const ProtectedRoute = ({ children, allowedRoles }) => {
+  const { isAuth, user } = UserData();
+
+  if (!isAuth) {
+    return <Navigate to="/login" />;
+  }
+
+  if (allowedRoles && !allowedRoles.includes(user.role)) {
+    return <Navigate to="/" />;
+  }
+
+  return children;
+};
 
 const App = () => {
   const { loading, isAuth, user } = UserData();
-  console.log(isAuth);
+
+  // Redirect authenticated users based on role
+  const getHomeRedirect = () => {
+    if (!isAuth) return <Login />;
+
+    if (user.role === "pharmacist") {
+      return <Navigate to="/pharmacist/dashboard" />;
+    }
+
+    return <Home />;
+  };
 
   return (
     <>
@@ -22,69 +50,93 @@ const App = () => {
       ) : (
         <BrowserRouter>
           <Routes>
-            {/* Public Routes */}
-            <Route path="/" element={isAuth ? <Home /> : <Login />} />
+            <Route path="/" element={getHomeRedirect()} />
 
             <Route
               path="/login"
-              element={isAuth ? <Navigate to="/" /> : <Login />}
+              element={!isAuth ? <Login /> : getHomeRedirect()}
             />
-
-            <Route
-              path="/register"
-              element={isAuth ? <Navigate to="/" /> : <Register />}
-            />
-
             <Route
               path="/verify/:token"
-              element={isAuth ? <Navigate to="/" /> : <OtpVerify />}
+              element={!isAuth ? <OtpVerify /> : getHomeRedirect()}
             />
-
+            <Route
+              path="/register"
+              element={!isAuth ? <Register /> : getHomeRedirect()}
+            />
             <Route
               path="/forgot"
-              element={isAuth ? <Navigate to="/" /> : <Forgot />}
+              element={!isAuth ? <Forgot /> : getHomeRedirect()}
             />
-
             <Route path="/reset-password/:token" element={<Reset />} />
 
-            {/* Protected Customer Routes */}
+            {/* Medicine Detail Route - accessible to authenticated users */}
             <Route
-              path="/upload-prescription"
+              path="/medicine.pratik/:id"
               element={
-                isAuth && user?.role === "customer" ? (
-                  <UploadPrescription />
-                ) : (
-                  <Navigate to="/login" />
-                )
+                <ProtectedRoute allowedRoles={["pharmacist", "customer"]}>
+                  <MedicineDetailPratik />
+                </ProtectedRoute>
               }
             />
 
+            {/* Pharmacist Routes */}
             <Route
-              path="/my-prescriptions"
+              path="/pharmacist/dashboard"
               element={
-                isAuth && user?.role === "customer" ? (
-                  <MyPrescriptions />
-                ) : (
-                  <Navigate to="/login" />
-                )
+                <ProtectedRoute allowedRoles={["pharmacist"]}>
+                  <PharmacistDashboardPratik />
+                </ProtectedRoute>
               }
             />
-
-            {/* Protected Pharmacist Routes */}
             <Route
-              path="/pharmacist-dashboard"
+              path="/pharmacist/medicines.pratik"
               element={
-                isAuth &&
-                (user?.role === "pharmacist" || user?.role === "admin") ? (
-                  <PharmacistDashboard />
-                ) : (
-                  <Navigate to="/login" />
-                )
+                <ProtectedRoute allowedRoles={["pharmacist"]}>
+                  <MedicinesListPratik />
+                </ProtectedRoute>
               }
             />
-
-            {/* Catch-all route for 404 */}
-            <Route path="*" element={<Navigate to="/" />} />
+            <Route
+              path="/pharmacist/add-medicine.pratik"
+              element={
+                <ProtectedRoute allowedRoles={["pharmacist"]}>
+                  <AddMedicinePratik />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/pharmacist/edit-medicine.pratik/:id"
+              element={
+                <ProtectedRoute allowedRoles={["pharmacist"]}>
+                  <EditMedicinePratik />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/pharmacist/inventory.pratik"
+              element={
+                <ProtectedRoute allowedRoles={["pharmacist"]}>
+                  <InventoryPratik />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/pharmacist/orders.pratik"
+              element={
+                <ProtectedRoute allowedRoles={["pharmacist"]}>
+                  <OrdersPratik />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/pharmacist/order.pratik/:id"
+              element={
+                <ProtectedRoute allowedRoles={["pharmacist"]}>
+                  <OrderDetailPratik />
+                </ProtectedRoute>
+              }
+            />
           </Routes>
         </BrowserRouter>
       )}

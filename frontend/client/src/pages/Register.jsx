@@ -3,13 +3,15 @@ import { UserData } from '../context/UserContext'
 import { useNavigate, Link } from 'react-router-dom'
 import { LoadingAnimation } from '../components/Loading'
 import { motion } from 'framer-motion'
-import { FaUser, FaEnvelope, FaLock, FaEye, FaEyeSlash, FaGoogle } from 'react-icons/fa'
+import { FaUser, FaEnvelope, FaLock, FaEye, FaEyeSlash } from 'react-icons/fa'
 
 const Register = () => {
     const [formData, setFormData] = useState({
         name: '',
         email: '',
-        password: ''
+        mobile: '',
+        password: '',
+        role: 'pharmacist' // Automatically set to pharmacist
     })
     const [showPassword, setShowPassword] = useState(false)
     const [formError, setFormError] = useState("")
@@ -50,10 +52,10 @@ const Register = () => {
     const submitHandler = (e) => {
         e.preventDefault()
         
-        const { name, email, password } = formData
+        const { name, email, mobile, password, role } = formData
         
         // Enhanced validation
-        if (!name.trim() || !email.trim() || !password.trim()) {
+        if (!name.trim() || !email.trim() || !mobile.trim() || !password.trim()) {
             setFormError("Please fill in all fields")
             return
         }
@@ -69,7 +71,7 @@ const Register = () => {
         }
         
         setFormError("")
-        registerUser(name, email, password, navigate)
+        registerUser(name, email, mobile, password, role, navigate)
     }
     
     // Animation variants
@@ -100,9 +102,9 @@ const Register = () => {
     ]
     
     return (
-        <div className='min-h-screen flex items-center justify-center bg-gradient-to-b from-black to-gray-900 p-4'>
+        <div className='min-h-screen flex items-center justify-center bg-[#F0F3FB] p-4'>
             <motion.div 
-                className='p-8 rounded-lg shadow-lg w-full max-w-md backdrop-blur-sm bg-opacity-80 bg-[#1A1A1D] border border-gray-800'
+                className='p-8 rounded-lg shadow-lg w-full max-w-md backdrop-blur-sm bg-[#FCFCFE] border border-[#C7C9CE]'
                 initial="hidden"
                 animate="visible"
                 variants={containerVariants}
@@ -111,17 +113,17 @@ const Register = () => {
               
                 </motion.div>
                 
-                <motion.h2 className='text-xl font-semibold text-center mb-2 text-[#50c878]' variants={itemVariants}>
+                <motion.h2 className='text-xl font-semibold text-center mb-2 text-[#055AF9]' variants={itemVariants}>
                     PROIMG
                 </motion.h2>
                 
-                <motion.h2 className='text-2xl font-bold text-white text-center mb-6' variants={itemVariants}>
-                    Create Account
+                <motion.h2 className='text-2xl font-bold text-[#343838] text-center mb-6' variants={itemVariants}>
+                    Register as Pharmacist
                 </motion.h2>
                 
                 {formError && (
                     <motion.div 
-                        className='mb-4 p-3 bg-red-500 bg-opacity-20 border border-red-500 rounded text-red-300 text-sm'
+                        className='mb-4 p-3 bg-red-500 bg-opacity-20 border border-red-500 rounded text-red-600 text-sm'
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: 'auto', opacity: 1 }}
                         transition={{ duration: 0.3 }}
@@ -133,12 +135,12 @@ const Register = () => {
                 
                 <form onSubmit={submitHandler} noValidate>
                     <motion.div className='mb-4' variants={itemVariants}>
-                        <label htmlFor="name" className='block text-sm font-medium text-gray-300 mb-1'>
+                        <label htmlFor="name" className='block text-sm font-medium text-[#343838] mb-1'>
                             NAME
                         </label>
                         <div className='relative'>
                             <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
-                                <FaUser className='text-gray-500' />
+                                <FaUser className='text-[#7F7E85]' />
                             </div>
                             <input 
                                 value={formData.name} 
@@ -146,7 +148,7 @@ const Register = () => {
                                 required 
                                 type="text" 
                                 id='name' 
-                                className='w-full py-2 pl-10 pr-3 border border-gray-700 bg-gray-900 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[#50c878] focus:border-transparent' 
+                                className='w-full py-2 pl-10 pr-3 border border-[#C7C9CE] bg-[#FCFCFE] rounded-md text-[#343838] focus:outline-none focus:ring-2 focus:ring-[#055AF9] focus:border-transparent' 
                                 placeholder='Enter your full name'
                                 aria-required="true"
                             />
@@ -154,12 +156,12 @@ const Register = () => {
                     </motion.div>
                     
                     <motion.div className='mb-4' variants={itemVariants}>
-                        <label htmlFor="email" className='block text-sm font-medium text-gray-300 mb-1'>
+                        <label htmlFor="email" className='block text-sm font-medium text-[#343838] mb-1'>
                             EMAIL
                         </label>
                         <div className='relative'>
                             <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
-                                <FaEnvelope className='text-gray-500' />
+                                <FaEnvelope className='text-[#7F7E85]' />
                             </div>
                             <input 
                                 value={formData.email} 
@@ -167,20 +169,38 @@ const Register = () => {
                                 required 
                                 type="email" 
                                 id='email' 
-                                className='w-full py-2 pl-10 pr-3 border border-gray-700 bg-gray-900 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[#50c878] focus:border-transparent' 
+                                className='w-full py-2 pl-10 pr-3 border border-[#C7C9CE] bg-[#FCFCFE] rounded-md text-[#343838] focus:outline-none focus:ring-2 focus:ring-[#055AF9] focus:border-transparent' 
                                 placeholder='Enter your email address'
+                                aria-required="true"
+                            />
+                        </div>
+                    </motion.div>
+
+                    <motion.div className='mb-4' variants={itemVariants}>
+                        <label htmlFor="mobile" className='block text-sm font-medium text-[#343838] mb-1'>
+                            MOBILE NUMBER
+                        </label>
+                        <div className='relative'>
+                            <input 
+                                value={formData.mobile} 
+                                onChange={handleChange} 
+                                required 
+                                type="tel" 
+                                id='mobile' 
+                                className='w-full py-2 px-3 border border-[#C7C9CE] bg-[#FCFCFE] rounded-md text-[#343838] focus:outline-none focus:ring-2 focus:ring-[#055AF9] focus:border-transparent' 
+                                placeholder='Enter your mobile number'
                                 aria-required="true"
                             />
                         </div>
                     </motion.div>
                     
                     <motion.div className='mb-4' variants={itemVariants}>
-                        <label htmlFor="password" className='block text-sm font-medium text-gray-300 mb-1'>
+                        <label htmlFor="password" className='block text-sm font-medium text-[#343838] mb-1'>
                             PASSWORD
                         </label>
                         <div className='relative'>
                             <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
-                                <FaLock className='text-gray-500' />
+                                <FaLock className='text-[#7F7E85]' />
                             </div>
                             <input 
                                 value={formData.password} 
@@ -188,7 +208,7 @@ const Register = () => {
                                 required 
                                 type={showPassword ? "text" : "password"} 
                                 id='password' 
-                                className='w-full py-2 pl-10 pr-10 border border-gray-700 bg-gray-900 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[#50c878] focus:border-transparent' 
+                                className='w-full py-2 pl-10 pr-10 border border-[#C7C9CE] bg-[#FCFCFE] rounded-md text-[#343838] focus:outline-none focus:ring-2 focus:ring-[#055AF9] focus:border-transparent' 
                                 placeholder='Create a secure password'
                                 aria-required="true"
                                 minLength="6"
@@ -200,8 +220,8 @@ const Register = () => {
                                 aria-label={showPassword ? "Hide password" : "Show password"}
                             >
                                 {showPassword ? 
-                                    <FaEyeSlash className='text-gray-500 hover:text-gray-300' /> : 
-                                    <FaEye className='text-gray-500 hover:text-gray-300' />
+                                    <FaEyeSlash className='text-[#7F7E85] hover:text-[#343838]' /> : 
+                                    <FaEye className='text-[#7F7E85] hover:text-[#343838]' />
                                 }
                             </button>
                         </div>
@@ -215,12 +235,12 @@ const Register = () => {
                                             className={`h-1 flex-1 rounded-full ${
                                                 passwordStrength > index 
                                                     ? strengthColors[passwordStrength] 
-                                                    : 'bg-gray-700'
+                                                    : 'bg-[#C7C9CE]'
                                             }`}
                                         ></div>
                                     ))}
                                 </div>
-                                <p className='text-xs text-gray-400'>
+                                <p className='text-xs text-[#7F7E85]'>
                                     {passwordStrength === 0 && "Very weak - add uppercase, numbers, and symbols"}
                                     {passwordStrength === 1 && "Weak - add more variety to your password"}
                                     {passwordStrength === 2 && "Medium - getting better!"}
@@ -230,12 +250,12 @@ const Register = () => {
                             </div>
                         )}
                         
-                        <p className='mt-1 text-xs text-gray-400'>Password must be at least 6 characters long</p>
+                        <p className='mt-1 text-xs text-[#7F7E85]'>Password must be at least 6 characters long</p>
                     </motion.div>
                     
                     <motion.button 
                         type='submit' 
-                        className='w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#50c878] hover:bg-[#3daf63] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#50c878] transition-colors duration-200 flex items-center justify-center'
+                        className='w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#055AF9] hover:bg-[#013188] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#055AF9] transition-colors duration-200 flex items-center justify-center'
                         disabled={btnLoading}
                         variants={itemVariants}
                         whileHover={{ scale: 1.02 }}
@@ -247,18 +267,18 @@ const Register = () => {
                     <motion.div className='mt-6 text-center' variants={itemVariants}>
                         <div className='relative mb-4'>
                             <div className='absolute inset-0 flex items-center'>
-                                <div className='w-full border-t border-gray-700'></div>
+                                <div className='w-full border-t border-[#C7C9CE]'></div>
                             </div>
                             <div className="relative flex justify-center text-sm">
-                                <span className='px-2 bg-[#1A1A1D] text-gray-400'>or</span>
+                                <span className='px-2 bg-[#FCFCFE] text-[#7F7E85]'>or</span>
                             </div>
                         </div>
                         
                         
                         
-                        <div className='text-gray-300'>
+                        <div className='text-[#7F7E85]'>
                             Already have an account?{' '}
-                            <Link to="/login" className='font-medium text-[#50c878] hover:underline'>
+                            <Link to="/login" className='font-medium text-[#055AF9] hover:text-[#013188] hover:underline'>
                                 Sign in instead
                             </Link>
                         </div>

@@ -21,23 +21,16 @@ const port = process.env.PORT || 5005;
 // Middlewares
 app.use(express.json());
 app.use(cookieParser());
-app.use(
-  cors({
-    origin: process.env.CLIENT_URL,
-    credentials: true,
-  }),
-);
 
-// Routes
+import userRoutes from "./routes/userRoutes.js";
+import pharmaRoutes from "./routes/pharmaRoutes.js";
+import orderRoutes from "./routes/orderRoutes.js";
+
 app.use("/api/user", userRoutes);
-app.use("/api/prescriptions", prescriptionRoutes);
+app.use("/api/pharma", pharmaRoutes);
+app.use("/api/order", orderRoutes);
 
-app.get("/", (req, res) => {
-  res.send("Server is running");
-});
-
-// Start server
 app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+  console.log(`Server is running on http://localhost:${port}`);
   connectDb();
 });

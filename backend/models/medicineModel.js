@@ -6,7 +6,31 @@ const medicineSchema = new mongoose.Schema(
     contents : [{
         ingredient: String, 
     }],
-    category: String,
+    category: { 
+      type: String,
+      enum: [
+        "Antibiotics",
+        "Painkillers",
+        "Vitamins & Supplements",
+        "Antiseptics",
+        "Cardiovascular",
+        "Diabetes Care",
+        "Respiratory",
+        "Gastrointestinal",
+        "Dermatology",
+        "Neurology",
+        "Orthopedic",
+        "Eye Care",
+        "Ear Care",
+        "Gynecology",
+        "Pediatrics",
+        "First Aid",
+        "Herbal & Ayurvedic",
+        "Homeopathy",
+        "Other"
+      ],
+      required: true
+    },
     description: String,
     image: { id: String, url: String },
     notes: String,
@@ -24,7 +48,7 @@ const medicineSchema = new mongoose.Schema(
       lowStock: Number,
       nearExpiryDays: Number
     },
-isActive: { type: Boolean, default: true }
+    isActive: { type: Boolean, default: true }
   },
   { timestamps: true }
 );
