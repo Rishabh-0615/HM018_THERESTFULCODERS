@@ -10,7 +10,6 @@ import cors from "cors";
 import multer from "multer";
 import fs from "fs";
 import FormData from "form-data";
-import { connectDb } from "./database/db.js";
 import userRoutes from "./routes/userRoutes.js";
 import prescriptionRoutes from "./routes/prescriptionRoutes.js";
 

@@ -3,8 +3,12 @@ import Medicine from "../models/medicineModel.js";
 import TryCatch from "../utils/TryCatch.js";
 import cloudinary from "../utils/cloudinary.js";
 import Tesseract from "tesseract.js";
-import pdfParse from "pdf-parse";
 import fs from "fs";
+import { createRequire } from "module";
+
+const require = createRequire(import.meta.url);
+const pdfParseLib = require("pdf-parse");
+const pdfParse = pdfParseLib.default || pdfParseLib;
 
 // Upload Prescription with AI Extraction
 export const uploadPrescription = TryCatch(async (req, res) => {
@@ -15,16 +19,7 @@ export const uploadPrescription = TryCatch(async (req, res) => {
     return res.status(400).json({ message: "Prescription file is required" });
   }
 
-  // Upload to Cloudinary
-  const result = await cloudinary.uploader.upload(req.file.path, {
-    folder: "prescriptions",
-    resource_type: "auto",
-  });
-
-  // Delete local file after upload
-  fs.unlinkSync(req.file.path);
-
-  // Extract text from prescription
+  // Extract text BEFORE deleting file
   let extractedText = "";
   const fileType = req.file.mimetype;
 
@@ -33,11 +28,18 @@ export const uploadPrescription = TryCatch(async (req, res) => {
     const pdfData = await pdfParse(dataBuffer);
     extractedText = pdfData.text;
   } else if (fileType.includes("image")) {
-    const ocrResult = await Tesseract.recognize(req.file.path, "eng", {
-      logger: (m) => console.log(m),
-    });
+    const ocrResult = await Tesseract.recognize(req.file.path, "eng");
     extractedText = ocrResult.data.text;
   }
+
+  // NOW upload to Cloudinary
+  const result = await cloudinary.uploader.upload(req.file.path, {
+    folder: "prescriptions",
+    resource_type: "auto",
+  });
+
+  // NOW delete local file
+  fs.unlinkSync(req.file.path);
 
   // Extract structured data using regex
   const structuredData = extractMedicinesWithRegex(extractedText);
