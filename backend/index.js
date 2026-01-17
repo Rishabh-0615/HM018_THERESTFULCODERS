@@ -28,8 +28,12 @@ app.use(cookieParser());
 
 
 import userRoutes from './routes/userRoutes.js';
+import pharmaRoutes from './routes/pharmaRoutes.js';
+import orderRoutes from './routes/orderRoutes.js';
 
-app.use('/api/user', userRoutes);       
+app.use('/api/user', userRoutes);
+app.use('/api/pharma', pharmaRoutes);
+app.use('/api/order', orderRoutes);
 
 app.listen(port , ()=>{
     console.log(`Server is running on http://localhost:${port}`);
