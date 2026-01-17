@@ -232,14 +232,17 @@ npm start
 ### **Customer Portal**
 <img width="1898" height="1085" alt="image" src="https://github.com/user-attachments/assets/4498525c-1e46-457f-be37-199596bd4591" />
 
-
-### **Pharmacist Dashboard**
-![Pharmacist Dashboard](https://via.placeholder.com/400x300/FF6B6B/FFFFFF?text=Pharmacist+Dashboard)
+### **Delivery Tracking**
+![WhatsApp Image 2026-01-18 at 01 36 37](https://github.com/user-attachments/assets/b6b9a044-0b23-4fb7-af44-28a93a5ae8c2)
 
 ### **Order Tracking**
 <img width="1897" height="1077" alt="image" src="https://github.com/user-attachments/assets/fdb72467-d33c-4e15-8280-d83deb74fba1" />
 
-### **Delivery Tracking**
+### **Pharmacist Dashboard**
+![WhatsApp Image 2026-01-18 at 01 36 37 (1)](https://github.com/user-attachments/assets/8e194668-d36d-4580-b0b5-f208132510c7)
+![WhatsApp Image 2026-01-18 at 01 36 37 (2)](https://github.com/user-attachments/assets/2ce179fc-5fcd-4e8d-b563-673791dfdba1)
+
+
 
 ---
 
