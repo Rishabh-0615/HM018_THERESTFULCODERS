@@ -231,7 +231,8 @@ npm start
 
 ### **Customer Portal**
 
-![Customer Dashboard](https://via.placeholder.com/400x300/055AF9/FFFFFF?text=Customer+Portal)
+![Customer Dashboard](<img width="1898" height="1085" alt="image" src="https://github.com/user-attachments/assets/0f7d370d-f448-41b4-8896-a079e89aa121" />
+)
 
 ### **Pharmacist Dashboard**
 
