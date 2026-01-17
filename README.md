@@ -7,7 +7,7 @@
 [![OpenAI](https://img.shields.io/badge/OpenAI-API-orange.svg)](https://openai.com/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-> **🏆 PCCOE Hackathon Winner - HM018**  
+> **🏆 PCCOE Hackathon - HM018**  
 > A revolutionary digital pharmacy ecosystem connecting customers, pharmacists, and delivery partners in a seamless, AI-powered workflow.
 
 ![PharmaFlow Banner](https://via.placeholder.com/1200x400/055AF9/FFFFFF?text=PharmaFlow+-+Digital+Pharmacy+Revolution)
@@ -262,16 +262,12 @@ We welcome contributions! Please follow these steps:
 
 ---
 
-## 📄 **License**
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
 ## 👥 **Team**
 
-- **Rishabh** - Project Lead & Backend Developer
-- **Team Members** - Frontend, AI Integration, Testing
+- **Rishabh Sharma** - Pune Institute of Computer Technology
+- **Pratik Chavan** - Pune Institute of Computer Technology
+- **Dhruv Gardharia** - Pune Institute of Computer Technology
+- **Sanket Shinde** - Pune Institute of Computer Technology
 
 ---
 
@@ -288,9 +284,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 For questions or support:
 
-- 📧 Email: team@pharmaflow.com
+- 📧 Email: sanketshinde1827@gmail.com
 - 🐛 Issues: [GitHub Issues](https://github.com/Rishabh-0615/HM018_THERESTFULCODERS/issues)
-- 📱 Demo: [Live Demo](https://pharmaflow-demo.vercel.app)
 
 ---
 
