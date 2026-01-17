@@ -36,7 +36,26 @@ const orderSchema = new mongoose.Schema(
       type: Number,
       required: true
     },
-    status: {
+
+    shippingAddress: {
+      flatNo: { type: String, required: true },
+      street: { type: String, required: true },
+      landmark: String,
+      city: { type: String, required: true },
+      state: { type: String, required: true },
+      pincode: { type: String, required: true },
+      phone: { type: String, required: true }
+    },
+
+    totalAmount: Number,
+
+    paymentMethod: {
+      type: String,
+      enum: ["COD", "Online", "Insurance"],
+      default: "COD"
+    },
+
+    orderStatus: {
       type: String,
       enum: ["pending", "confirmed", "preparing", "ready", "delivered", "cancelled"],
       default: "pending"
@@ -46,22 +65,14 @@ const orderSchema = new mongoose.Schema(
       enum: ["pending", "paid", "failed"],
       default: "pending"
     },
-    paymentMethod: {
-      type: String,
-      enum: ["cash", "card", "upi", "online"],
-      default: "cash"
-    },
-    prescriptionRequired: {
-      type: Boolean,
-      default: false
-    },
+
     prescriptionImage: {
-      id: String,
-      url: String
+      url: String,
+      public_id: String
     },
-    notes: String,
-    pharmacistNotes: String,
-    deliveryDate: Date
+
+    deliveryDate: Date,
+    notes: String
   },
   { timestamps: true }
 );

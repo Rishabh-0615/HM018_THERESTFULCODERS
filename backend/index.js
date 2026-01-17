@@ -28,12 +28,23 @@ app.use(cookieParser());
 
 
 import userRoutes from './routes/userRoutes.js';
+<<<<<<< Updated upstream
 import pharmaRoutes from './routes/pharmaRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 
 app.use('/api/user', userRoutes);
 app.use('/api/pharma', pharmaRoutes);
 app.use('/api/order', orderRoutes);
+=======
+import medicineRoutes from './routes/medicineRoutes.js';
+import prescriptionRoutes from './routes/prescriptionRoutes.js';
+import orderRoutes from './routes/orderRoutes.js';
+
+app.use('/api/user', userRoutes);
+app.use('/api/medicines', medicineRoutes);
+app.use('/api/prescriptions', prescriptionRoutes);
+app.use('/api/orders', orderRoutes);
+>>>>>>> Stashed changes
 
 app.listen(port , ()=>{
     console.log(`Server is running on http://localhost:${port}`);
