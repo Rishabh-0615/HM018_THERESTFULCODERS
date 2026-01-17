@@ -1,14 +1,14 @@
+import "dotenv/config";
 import Prescription from "../models/prescriptionModel.js";
 import Medicine from "../models/medicineModel.js";
 import TryCatch from "../utils/TryCatch.js";
 import cloudinary from "../utils/cloudinary.js";
 import Tesseract from "tesseract.js";
+import * as pdfParse from "pdf-parse";
 import fs from "fs";
-import { createRequire } from "module";
+import OpenAI from "openai";
 
-const require = createRequire(import.meta.url);
-const pdfParseLib = require("pdf-parse");
-const pdfParse = pdfParseLib.default || pdfParseLib;
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 // Upload Prescription with AI Extraction
 export const uploadPrescription = TryCatch(async (req, res) => {
@@ -30,6 +30,30 @@ export const uploadPrescription = TryCatch(async (req, res) => {
   } else if (fileType.includes("image")) {
     const ocrResult = await Tesseract.recognize(req.file.path, "eng");
     extractedText = ocrResult.data.text;
+  }
+
+  // Generate LLM summary for pharmacist
+  let summary = "Summary not available.";
+  try {
+    const response = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are a medical assistant. Summarize the prescription text concisely, including patient details, doctor info, medicines with dosages, and any instructions. Keep it professional and under 200 words.",
+        },
+        {
+          role: "user",
+          content: `Prescription text: ${extractedText}`,
+        },
+      ],
+      max_tokens: 200,
+    });
+    summary = response.choices[0].message.content.trim();
+  } catch (error) {
+    console.error("LLM summarization failed:", error);
+    // Fallback: basic summary from extracted data
   }
 
   // NOW upload to Cloudinary
@@ -60,6 +84,7 @@ export const uploadPrescription = TryCatch(async (req, res) => {
     },
     expiryDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days validity
     aiValidated: true,
+    summary, // Add LLM summary for pharmacist
   });
 
   res.status(201).json({
@@ -346,8 +371,6 @@ export const deletePrescription = TryCatch(async (req, res) => {
 
   res.json({ message: "Prescription deleted successfully" });
 });
-
-import Prescription from "../models/prescriptionModel.js";
 
 export const uploadPrescriptionSimple = async (req, res) => {
   try {

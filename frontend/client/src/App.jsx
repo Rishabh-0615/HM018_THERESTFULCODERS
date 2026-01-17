@@ -28,8 +28,8 @@ import OrderDetailPratik from "./pages/OrderDetail.pratik";
 import MyPrescriptions from "./pages/MyPrescriptions";
 import UploadPrescription from "./pages/UploadPrescription";
 import PharmacistDashboard from "./pages/PharmacistDashboard";
-import { UserData } from "./context/UserContext";
-import { Loading } from "./components/Loading";
+//import { UserData } from "./context/UserContext";
+//import { Loading } from "./components/Loading";
 
 // Protected Route Component
 const ProtectedRoute = ({ children, allowedRoles }) => {
@@ -137,7 +137,7 @@ const App = () => {
             <Route
               path="/my-prescriptions"
               element={
-                <ProtectedRoute allowedRoles={["customer"]}>
+                <ProtectedRoute allowedRoles={["customer", "pharmacist"]}>
                   <MyPrescriptions />
                 </ProtectedRoute>
               }
@@ -145,7 +145,7 @@ const App = () => {
             <Route
               path="/upload-prescription"
               element={
-                <ProtectedRoute allowedRoles={["customer"]}>
+                <ProtectedRoute allowedRoles={["customer", "pharmacist"]}>
                   <UploadPrescription />
                 </ProtectedRoute>
               }

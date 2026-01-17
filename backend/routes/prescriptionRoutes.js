@@ -7,21 +7,39 @@ import {
   getMyPrescriptions,
   getPrescriptionById,
   deletePrescription,
+  uploadPrescriptionSimple,
+  getMyPrescriptionsSimple,
 } from "../controllers/prescriptionController.js";
 import { isAuth } from "../middlewares/isAuth.js";
-import { uploadPrescription as uploadMiddleware } from "../middlewares/multer.js";
+import { uploadPrescription as multerUpload } from "../middlewares/multer.js";
 
 const router = express.Router();
 
-// Customer routes
-router.post("/upload", isAuth, uploadMiddleware, uploadPrescription);
+// Upload prescription with AI extraction (expects file upload)
+router.post("/upload", isAuth, multerUpload, uploadPrescription);
+
+// Validate prescription stock
 router.get("/validate/:prescriptionId", isAuth, validatePrescription);
-router.get("/my-prescriptions", isAuth, getMyPrescriptions);
+
+// Approve/reject prescription (pharmacist only)
+router.put("/approve/:prescriptionId", isAuth, approvePrescription);
+
+// Get pending prescriptions (pharmacist dashboard)
+router.get("/pending", isAuth, getPendingPrescriptions);
+
+// Get customer's prescriptions
+router.get("/my", isAuth, getMyPrescriptions);
+
+// Get single prescription details
 router.get("/:prescriptionId", isAuth, getPrescriptionById);
+
+// Delete prescription (customer only)
 router.delete("/:prescriptionId", isAuth, deletePrescription);
 
-// Pharmacist routes
-router.get("/pending/all", isAuth, getPendingPrescriptions);
-router.put("/approve/:prescriptionId", isAuth, approvePrescription);
+// Alternative simple upload (if needed, e.g., for manual entry)
+router.post("/upload-simple", isAuth, uploadPrescriptionSimple);
+
+// Alternative simple get prescriptions (if needed)
+router.get("/my-simple", isAuth, getMyPrescriptionsSimple);
 
 export default router;

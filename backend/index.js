@@ -10,6 +10,7 @@ import cors from "cors";
 import multer from "multer";
 import fs from "fs";
 import FormData from "form-data";
+
 dotenv.config();
 const port = process.env.PORT || 5000;
 
@@ -27,15 +28,13 @@ app.use(express.json());
 app.use(cookieParser());
 import pharmaRoutes from "./routes/pharmaRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
-
+import userRoutes from "./routes/userRoutes.js";
+import medicineRoutes from "./routes/medicineRoutes.js";
+import prescriptionRoutes from "./routes/prescriptionRoutes.js";
 app.use("/api/user", userRoutes);
 app.use("/api/pharma", pharmaRoutes);
 app.use("/api/order", orderRoutes);
-import medicineRoutes from "./routes/medicineRoutes.js";
-import prescriptionRoutes from "./routes/prescriptionRoutes.js";
-import orderRoutes from "./routes/orderRoutes.js";
-
-app.use("/api/user", userRoutes);
+//import orderRoutes from "./routes/orderRoutes.js";
 app.use("/api/medicines", medicineRoutes);
 app.use("/api/prescriptions", prescriptionRoutes);
 app.use("/api/orders", orderRoutes);
