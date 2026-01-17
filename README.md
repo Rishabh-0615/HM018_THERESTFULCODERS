@@ -1,4 +1,4 @@
-# 🏥 **PharmaFlow** - Complete Pharmacy Management System
+# 🏥 **NexPharma** - Complete Pharmacy Management System
 
 [![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
 [![React](https://img.shields.io/badge/React-18+-blue.svg)](https://reactjs.org/)
@@ -10,13 +10,14 @@
 > **🏆 PCCOE Hackathon - HM018**  
 > A revolutionary digital pharmacy ecosystem connecting customers, pharmacists, and delivery partners in a seamless, AI-powered workflow.
 
-![PharmaFlow Banner](https://via.placeholder.com/1200x400/055AF9/FFFFFF?text=PharmaFlow+-+Digital+Pharmacy+Revolution)
+![NexPharma Banner](![WhatsApp Image 2026-01-18 at 00 50 23](https://github.com/user-attachments/assets/8c4e6f79-b434-420a-a089-375af8cc4263)
+)
 
 ---
 
 ## 🌟 **Overview**
 
-**PharmaFlow** is an end-to-end pharmacy management platform designed to modernize healthcare delivery. Built for the **PCCOE Hackathon (HM018)**, it transforms traditional pharmacy operations into a digital-first experience, ensuring safety, efficiency, and accessibility for all stakeholders.
+**NexPharma** is an end-to-end pharmacy management platform designed to modernize healthcare delivery. Built for the **PCCOE Hackathon (HM018)**, it transforms traditional pharmacy operations into a digital-first experience, ensuring safety, efficiency, and accessibility for all stakeholders.
 
 ### 🎯 **Mission**
 
