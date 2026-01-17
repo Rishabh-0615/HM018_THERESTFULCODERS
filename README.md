@@ -230,19 +230,16 @@ npm start
 ## 🎨 **UI Screenshots**
 
 ### **Customer Portal**
-
-![Customer Dashboard](<img width="1898" height="1085" alt="image" src="https://github.com/user-attachments/assets/0f7d370d-f448-41b4-8896-a079e89aa121" />
-)
 <img width="1898" height="1085" alt="image" src="https://github.com/user-attachments/assets/4498525c-1e46-457f-be37-199596bd4591" />
 
 
 ### **Pharmacist Dashboard**
-
 ![Pharmacist Dashboard](https://via.placeholder.com/400x300/FF6B6B/FFFFFF?text=Pharmacist+Dashboard)
 
 ### **Order Tracking**
+<img width="1897" height="1077" alt="image" src="https://github.com/user-attachments/assets/fdb72467-d33c-4e15-8280-d83deb74fba1" />
 
-![Order Tracking](https://via.placeholder.com/400x300/FFA500/FFFFFF?text=Order+Tracking)
+### **Delivery Tracking**
 
 ---
 
