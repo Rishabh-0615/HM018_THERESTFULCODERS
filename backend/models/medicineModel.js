@@ -8,6 +8,7 @@ const medicineSchema = new mongoose.Schema(
     }],
     category: String,
     description: String,
+    image: { id: String, url: String },
 
     price: { type: Number, required: true },
     stock: { type: Number, required: true },
