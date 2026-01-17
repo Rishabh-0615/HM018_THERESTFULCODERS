@@ -16,8 +16,15 @@ export const UserProvider = ({ children }) => {
       setUser(data.user);
       setIsAuth(true);
       setBtnLoading(false);
-      navigate("/");
-      fetchPins();
+      
+      // Navigate based on role
+      if (data.user.role === 'pharmacist') {
+        navigate("/pharmacist/dashboard");
+      } else {
+        navigate("/");
+      }
+      
+      if (fetchPins) fetchPins();
     } catch (error) {
       toast.error(error.response.data.message);
       setBtnLoading(false);
@@ -55,10 +62,10 @@ export const UserProvider = ({ children }) => {
   }
   }
 
-  async function registerUser(name, email, password, navigate) {
+  async function registerUser(name, email, mobile, password, role, navigate) {
     setBtnLoading(true);
     try {
-      const { data } = await axios.post("/api/user/register", { name, email, password });
+      const { data } = await axios.post("/api/user/register", { name, email, mobile, password, role });
       toast.success(data.message);
       const token=data.token
       setBtnLoading(false);
@@ -75,11 +82,20 @@ export const UserProvider = ({ children }) => {
     try {
       const { data } = await axios.post("/api/user/verifyOtp/"+token, {otp });
       toast.success(data.message);
-      setUser(data.user);
-      setIsAuth(true);
-      setBtnLoading(false);
-      navigate("/");
-      fetchPins();
+      
+      // Don't set auth for pharmacists awaiting verification
+      if (data.user.role === 'pharmacist') {
+        toast.info("Your account is pending admin verification. You will be able to login once approved.");
+        setIsAuth(false);
+        setBtnLoading(false);
+        navigate("/login");
+      } else {
+        setUser(data.user);
+        setIsAuth(true);
+        setBtnLoading(false);
+        navigate("/");
+        if (fetchPins) fetchPins();
+      }
     } catch (error) {
       toast.error(error.response.data.message);
       setBtnLoading(false);

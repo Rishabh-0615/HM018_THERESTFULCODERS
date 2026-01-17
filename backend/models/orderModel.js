@@ -1,50 +1,67 @@
 // models/Order.js
 import mongoose from "mongoose";
 
+const orderItemSchema = new mongoose.Schema({
+  medicine: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Medicine",
+    required: true
+  },
+  name: { type: String, required: true },
+  quantity: { type: Number, required: true, min: 1 },
+  price: { type: Number, required: true },
+  image: { id: String, url: String }
+});
+
 const orderSchema = new mongoose.Schema(
   {
-    customerId: {
+    orderNumber: {
+      type: String,
+      required: true,
+      unique: true
+    },
+    customer: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true
     },
-
-    medicines: [
-      {
-        medicineId: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Medicine"
-        },
-        quantity: Number,
-        price: Number
-      }
-    ],
-
-    prescriptionId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Prescription"
+    customerDetails: {
+      name: { type: String, required: true },
+      email: { type: String, required: true },
+      mobile: { type: String, required: true },
+      address: { type: String, required: true }
     },
-
-    totalAmount: Number,
-
-    orderStatus: {
+    items: [orderItemSchema],
+    totalAmount: {
+      type: Number,
+      required: true
+    },
+    status: {
       type: String,
-      enum: [
-        "placed",
-        "approved",
-        "packed",
-        "shipped",
-        "delivered",
-        "cancelled"
-      ],
-      default: "placed"
+      enum: ["pending", "confirmed", "preparing", "ready", "delivered", "cancelled"],
+      default: "pending"
     },
-
     paymentStatus: {
       type: String,
       enum: ["pending", "paid", "failed"],
       default: "pending"
-    }
+    },
+    paymentMethod: {
+      type: String,
+      enum: ["cash", "card", "upi", "online"],
+      default: "cash"
+    },
+    prescriptionRequired: {
+      type: Boolean,
+      default: false
+    },
+    prescriptionImage: {
+      id: String,
+      url: String
+    },
+    notes: String,
+    pharmacistNotes: String,
+    deliveryDate: Date
   },
   { timestamps: true }
 );

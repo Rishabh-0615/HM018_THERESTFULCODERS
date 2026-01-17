@@ -31,9 +31,9 @@ export const registerWithOtp = TryCatch(async (req, res) => {
     });
   }
 
-  if (!role || !['customer', 'pharmacist', 'delivery', 'admin'].includes(role)) {
+  if (!role || !['customer', 'pharmacist'].includes(role)) {
     return res.status(400).json({
-      message: "Invalid role. Must be customer, pharmacist, delivery, or admin",
+      message: "Invalid role. Must be customer or pharmacist",
     });
   }
 
@@ -117,16 +117,21 @@ export const verifyOtpAndRegister = TryCatch(async (req, res) => {
       mobile: tempUser.mobile,
       password: hashPassword,
       role: tempUser.role,
-      isVerifiedByAdmin: ['pharmacist', 'delivery'].includes(tempUser.role) ? false : undefined
+      isVerifiedByAdmin: tempUser.role === 'pharmacist' ? false : undefined
     });
 
-    delete TEMP_USERS[email]; //
+    delete TEMP_USERS[email];
 
-    generateToken(user, res);
+    // Only generate token for non-pharmacist users or verified pharmacists
+    if (user.role !== 'pharmacist') {
+      generateToken(user, res);
+    }
 
     res.status(201).json({
       user,
-      message: "User registered successfully",
+      message: user.role === 'pharmacist' 
+        ? "Registration successful. Your account is pending admin verification." 
+        : "User registered successfully",
     });
   } catch (error) {
     console.error("Token verification failed:", error);
@@ -146,15 +151,14 @@ export const loginUser=TryCatch(async(req,res)=>{
         });
     }
 
-    // Check if pharmacist or delivery user is verified
-    if ((user.role === 'pharmacist' || user.role === 'delivery') && !user.isVerifiedByAdmin) {
+    // Check if pharmacist user is verified
+    if (user.role === 'pharmacist' && !user.isVerifiedByAdmin) {
         return res.status(403).json({
             message: "Your account is pending admin verification. Please wait for approval.",
         });
     }
 
     const comaparePassword=await bcrypt.compare(password,user.password);
-
 
     if(!comaparePassword){
         return res.status(400).json({
@@ -163,7 +167,6 @@ export const loginUser=TryCatch(async(req,res)=>{
 
     }
     generateToken(user,res);
-
 
     res.json({
         user,
