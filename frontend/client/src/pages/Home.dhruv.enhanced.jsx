@@ -58,7 +58,7 @@ export default function HomeDhruvEnhanced() {
 
   useEffect(() => {
     /* FETCH MEDICINES */
-    fetch("http://localhost:5005/api/medicines")
+    fetch(`${API_BASE_URL}/api/medicines`)
       .then(res => res.json())
       .then(data => {
         setMedicines(data);
@@ -70,7 +70,7 @@ export default function HomeDhruvEnhanced() {
       });
 
     /* FETCH REFILL SUGGESTIONS */
-    fetch("http://localhost:5005/api/orders/refill-suggestions", {
+    fetch(`${API_BASE_URL}/api/orders/refill-suggestions`, {
       credentials: "include"
     })
       .then(res => res.json())

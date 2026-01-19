@@ -57,7 +57,7 @@ export default function CheckoutDhruvEnhanced() {
   useEffect(() => {
     if (cartItems.length === 0) return;
 
-    fetch("http://localhost:5005/api/orders/check-safety", {
+    fetch(`${API_BASE_URL}/api/orders/check-safety`, {
       method: "POST",
       credentials: "include",
       headers: {
@@ -123,7 +123,7 @@ export default function CheckoutDhruvEnhanced() {
         formData.append("prescription", prescriptionFile);
       }
 
-      const res = await fetch("http://localhost:5005/api/orders", {
+      const res = await fetch(`${API_BASE_URL}/api/orders`, {
         method: "POST",
         credentials: "include",
         body: formData

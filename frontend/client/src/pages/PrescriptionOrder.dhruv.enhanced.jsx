@@ -36,7 +36,7 @@ export default function PrescriptionOrderDhruvEnhanced() {
     }
 
     // Fetch available medicines
-    fetch("http://localhost:5005/api/medicines")
+    fetch(`${API_BASE_URL}/api/medicines`)
       .then(res => res.json())
       .then(data => {
         // Filter medicines that match prescription

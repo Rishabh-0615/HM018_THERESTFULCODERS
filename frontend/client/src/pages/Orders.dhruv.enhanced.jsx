@@ -27,7 +27,7 @@ export default function OrdersDhruvEnhanced() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://localhost:5005/api/orders/my-orders", {
+    fetch(`${API_BASE_URL}/api/orders/my-orders`, {
       credentials: "include"
     })
       .then(res => res.json())

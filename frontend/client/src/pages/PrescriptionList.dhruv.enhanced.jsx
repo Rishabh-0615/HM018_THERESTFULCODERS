@@ -25,7 +25,7 @@ export default function PrescriptionListDhruvEnhanced() {
 
   useEffect(() => {
     // Fetch prescriptions from API
-    fetch("http://localhost:5005/api/prescriptions/my-prescriptions", {
+    fetch(`${API_BASE_URL}/api/prescriptions/my-prescriptions`, {
       credentials: "include"
     })
       .then(res => res.json())
