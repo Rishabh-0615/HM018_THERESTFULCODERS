@@ -1,21 +1,45 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 
 const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
-  const [cartItems, setCartItems] = useState([]);
+  // Initialize cart from localStorage
+  const [cartItems, setCartItems] = useState(() => {
+    try {
+      const savedCart = localStorage.getItem("dhruv_cart");
+      return savedCart ? JSON.parse(savedCart) : [];
+    } catch (error) {
+      console.error("Error loading cart from localStorage:", error);
+      return [];
+    }
+  });
+
+  // Save cart to localStorage whenever it changes
+  useEffect(() => {
+    try {
+      localStorage.setItem("dhruv_cart", JSON.stringify(cartItems));
+      console.log("Cart saved to localStorage:", cartItems);
+    } catch (error) {
+      console.error("Error saving cart to localStorage:", error);
+    }
+  }, [cartItems]);
 
   const addToCart = (medicine) => {
+    console.log("Adding to cart:", medicine);
     setCartItems(prev => {
       const existing = prev.find(i => i._id === medicine._id);
       if (existing) {
-        return prev.map(i =>
+        const updated = prev.map(i =>
           i._id === medicine._id
             ? { ...i, quantity: i.quantity + 1 }
             : i
         );
+        console.log("Updated cart (existing item):", updated);
+        return updated;
       }
-      return [...prev, { ...medicine, quantity: 1 }];
+      const newCart = [...prev, { ...medicine, quantity: 1 }];
+      console.log("Updated cart (new item):", newCart);
+      return newCart;
     });
   };
 
@@ -35,7 +59,11 @@ export const CartProvider = ({ children }) => {
     setCartItems(prev => prev.filter(i => i._id !== id));
   };
 
-  const clearCart = () => setCartItems([]);
+  const clearCart = () => {
+    setCartItems([]);
+    localStorage.removeItem("dhruv_cart");
+    console.log("Cart cleared");
+  };
 
   const totalAmount = cartItems.reduce(
     (sum, item) => sum + item.price * item.quantity,

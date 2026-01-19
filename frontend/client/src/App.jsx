@@ -9,14 +9,14 @@ import Forgot from "./pages/Forgot";
 import Reset from "./pages/Reset";
 import OtpVerify from "./pages/OtpVerify";
 
-// Dhruv's pages
-import HomeDhruv from "./pages/Home.dhruv";
-import LoginDhruv from "./pages/Login.dhruv";
+// Dhruv's pages - Enhanced versions
+import HomeDhruv from "./pages/Home.dhruv.enhanced";
+import LoginDhruv from "./pages/Login.dhruv.enhanced";
 import RegisterDhruv from "./pages/Register.dhruv";
-import PrescriptionListDhruv from "./pages/PrescriptionList.dhruv";
-import PrescriptionOrderDhruv from "./pages/PrescriptionOrder.dhruv";
-import CheckoutDhruv from "./pages/Checkout.Dhruv";
-import OrdersDhruv from "./pages/Orders.dhruv";
+import PrescriptionListDhruv from "./pages/PrescriptionList.dhruv.enhanced";
+import PrescriptionOrderDhruv from "./pages/PrescriptionOrder.dhruv.enhanced";
+import CheckoutDhruv from "./pages/Checkout.Dhruv.enhanced";
+import OrdersDhruv from "./pages/Orders.dhruv.enhanced";
 import PharmacistDashboardPratik from "./pages/PharmacistDashboard.pratik";
 import MedicinesListPratik from "./pages/MedicinesList.pratik";
 import AddMedicinePratik from "./pages/AddMedicine.pratik";
@@ -25,6 +25,7 @@ import MedicineDetailPratik from "./pages/MedicineDetail.pratik";
 import InventoryPratik from "./pages/Inventory.pratik";
 import OrdersPratik from "./pages/Orders.pratik";
 import OrderDetailPratik from "./pages/OrderDetail.pratik";
+import HeroSection from "./pages/HeroSection";
 
 // Protected Route Component
 const ProtectedRoute = ({ children, allowedRoles }) => {
@@ -69,7 +70,7 @@ const App = () => {
         <BrowserRouter>
           <Routes>
             {/* Main Routes */}
-            <Route path="/" element={getHomeRedirect()} />          
+            <Route path="/" element={<HeroSection />} />          
             
             <Route path="/login" element={!isAuth ? <Login /> : getHomeRedirect()} />
             <Route path="/verify/:token" element={!isAuth ? <OtpVerify /> : getHomeRedirect()} />

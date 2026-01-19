@@ -26,12 +26,8 @@ export default function OrdersDhruv() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = getTokenFromCookies();
-
     fetch("http://localhost:5005/api/orders/my-orders", {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
+      credentials: "include" // Send cookies with request
     })
       .then(res => res.json())
       .then(data => {
@@ -152,7 +148,7 @@ export default function OrdersDhruv() {
                 }}>
                   <div>
                     <h3 style={{ color: theme.textPrimary, marginBottom: 8 }}>
-                      Order #{order._id.slice(-8).toUpperCase()}
+                      Order #{order.orderNumber || order._id.slice(-8).toUpperCase()}
                     </h3>
                     <div style={{ display: "flex", alignItems: "center", gap: 8, color: theme.textSecondary, fontSize: 14 }}>
                       <FaCalendar />
@@ -182,10 +178,10 @@ export default function OrdersDhruv() {
                     alignItems: "center",
                     gap: 8
                   }}>
-                    <FaBox /> Items ({order.medicines?.length || 0})
+                    <FaBox /> Items ({order.items?.length || 0})
                   </h4>
                   <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                    {order.medicines?.map((item, idx) => (
+                    {order.items?.map((item, idx) => (
                       <div
                         key={idx}
                         style={{
@@ -212,7 +208,7 @@ export default function OrdersDhruv() {
                           </div>
                           <div>
                             <div style={{ color: theme.textPrimary, fontWeight: 600 }}>
-                              {item.medicineId?.name || "Medicine"}
+                              {item.name || "Medicine"}
                             </div>
                             <div style={{ color: theme.textSecondary, fontSize: 13 }}>
                               Quantity: {item.quantity}

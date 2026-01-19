@@ -17,14 +17,6 @@ import {
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 
-/* 🍪 TOKEN FROM COOKIES */
-const getTokenFromCookies = () => {
-  return document.cookie
-    .split("; ")
-    .find(row => row.startsWith("token="))
-    ?.split("=")[1];
-};
-
 export default function HomeDhruv() {
   const [medicines, setMedicines] = useState([]);
   const [refillSuggestions, setRefillSuggestions] = useState([]);
@@ -35,14 +27,18 @@ export default function HomeDhruv() {
   const { user, logoutUser } = UserDataDhruv();
   const { cartItems, addToCart, updateQuantity, totalAmount } = useCart();
 
+  // Debug: Log cart items whenever they change
+  useEffect(() => {
+    console.log("Cart items updated:", cartItems);
+    console.log("Total amount:", totalAmount);
+  }, [cartItems, totalAmount]);
+
   const getItemQuantity = (medicineId) => {
     const item = cartItems.find(i => i._id === medicineId);
     return item ? item.quantity : 0;
   };
 
   useEffect(() => {
-    const token = getTokenFromCookies();
-
     /* 🔹 FETCH MEDICINES */
     fetch("http://localhost:5005/api/medicines")
       .then(res => res.json())
@@ -56,16 +52,12 @@ export default function HomeDhruv() {
       });
 
     /* 🔹 FETCH REFILL SUGGESTIONS */
-    if (token) {
-      fetch("http://localhost:5005/api/orders/refill-suggestions", {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-        .then(res => res.json())
-        .then(data => setRefillSuggestions(data))
-        .catch(() => {});
-    }
+    fetch("http://localhost:5005/api/orders/refill-suggestions", {
+      credentials: "include" // Send cookies with request
+    })
+      .then(res => res.json())
+      .then(data => setRefillSuggestions(data))
+      .catch(() => {});
 
     /* 🧪 DEMO DATA (COMMENTED – KEEP FOR FALLBACK)
     const demoData = [...];

@@ -16,19 +16,18 @@ import {
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 
-const getTokenFromCookies = () => {
-  return document.cookie
-    .split("; ")
-    .find(row => row.startsWith("token="))
-    ?.split("=")[1];
-};
-
 export default function CheckoutDhruv() {
   const { cartItems, updateQuantity, removeFromCart, clearCart, totalAmount } = useCart();
   const [warnings, setWarnings] = useState([]);
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1); // 1: Cart, 2: Address, 3: Payment
   const [prescriptionFile, setPrescriptionFile] = useState(null);
+
+  // Debug: Log cart items on mount and when they change
+  useEffect(() => {
+    console.log("Checkout - Cart items:", cartItems);
+    console.log("Checkout - Total amount:", totalAmount);
+  }, [cartItems, totalAmount]);
 
   const [address, setAddress] = useState({
     flatNo: "",
@@ -49,13 +48,11 @@ export default function CheckoutDhruv() {
   useEffect(() => {
     if (cartItems.length === 0) return;
 
-    const token = getTokenFromCookies();
-
-    fetch("http://localhost:5005/api/orders/safety-check", {
+    fetch("http://localhost:5005/api/orders/check-safety", {
       method: "POST",
+      credentials: "include",
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({
         medicines: cartItems.map(item => ({
@@ -96,8 +93,6 @@ export default function CheckoutDhruv() {
     setLoading(true);
 
     try {
-      const token = getTokenFromCookies();
-      
       // Create FormData for file upload
       const formData = new FormData();
       
@@ -121,9 +116,7 @@ export default function CheckoutDhruv() {
 
       const res = await fetch("http://localhost:5005/api/orders", {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`
-        },
+        credentials: "include", // Send cookies with request
         body: formData
       });
 
