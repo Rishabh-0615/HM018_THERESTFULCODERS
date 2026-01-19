@@ -21,30 +21,31 @@ cloudinary.v2.config({
 
 const app=express();
 
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:5173', // Frontend URL
+  credentials: true // Allow credentials (cookies)
+}));
 app.use(bodyParser.json()); 
 app.use(express.json());
 app.use(cookieParser());
 
 
 import userRoutes from './routes/userRoutes.js';
-<<<<<<< Updated upstream
 import pharmaRoutes from './routes/pharmaRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
+import orderRoutesDhruv from './routes/orderRoutesDhruv.js';
+import medicineRoutes from './routes/medicineRoutes.js';
+import prescriptionRoutes from './routes/prescriptionRoutes.js';
 
+// Pratik's routes
 app.use('/api/user', userRoutes);
 app.use('/api/pharma', pharmaRoutes);
 app.use('/api/order', orderRoutes);
-=======
-import medicineRoutes from './routes/medicineRoutes.js';
-import prescriptionRoutes from './routes/prescriptionRoutes.js';
-import orderRoutes from './routes/orderRoutes.js';
 
-app.use('/api/user', userRoutes);
+// Dhruv's routes
 app.use('/api/medicines', medicineRoutes);
 app.use('/api/prescriptions', prescriptionRoutes);
-app.use('/api/orders', orderRoutes);
->>>>>>> Stashed changes
+app.use('/api/orders', orderRoutesDhruv);
 
 app.listen(port , ()=>{
     console.log(`Server is running on http://localhost:${port}`);
