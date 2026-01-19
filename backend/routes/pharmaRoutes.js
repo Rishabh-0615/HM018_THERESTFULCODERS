@@ -13,6 +13,8 @@ import {
   getExpiredMedicinesPratik,
   getPharmacistStatsPratik,
   getCategoriesPratik,
+  createDeliveryBoy,
+  getAllDeliveryBoys
 } from "../controllers/pharmaControllers.js";
 import uploadFile from "../middlewares/multer.js";
 
@@ -37,5 +39,8 @@ router.get("/stats.pratik", isAuth, isPharmacist, getPharmacistStatsPratik);
 router.get("/medicines.pratik", getAllMedicinesPratik);
 router.get("/medicine.pratik/:id", getMedicineByIdPratik);
 router.get("/categories.pratik", getCategoriesPratik);
+
+router.post("/delivery-boy", isAuth, isPharmacist, createDeliveryBoy);
+router.get("/delivery-boys", isAuth, isPharmacist, getAllDeliveryBoys);
 
 export default router;

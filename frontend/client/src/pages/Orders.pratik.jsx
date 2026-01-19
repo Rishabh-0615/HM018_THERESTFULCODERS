@@ -156,8 +156,8 @@ const OrdersPratik = () => {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm">
                           <div>
-                            <p className="text-[#343838] font-medium">{order.customerDetails.name}</p>
-                            <p className="text-[#7F7E85] text-xs">{order.customerDetails.mobile}</p>
+                            <p className="text-[#343838] font-medium">{order.customerDetails?.name || 'N/A'}</p>
+                            <p className="text-[#7F7E85] text-xs">{order.customerDetails?.mobile || 'N/A'}</p>
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-[#343838]">

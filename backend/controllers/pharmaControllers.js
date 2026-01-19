@@ -1,8 +1,11 @@
 import Medicine from "../models/medicineModel.js";
-import { User } from "../models/userModel.js";
+import { User } from "../models/userModel.js"
 import TryCatch from "../utils/TryCatch.js";
 import getDataUrl from "../utils/urlGenerator.js";
 import cloudinary from "cloudinary";
+import nodemailer from "nodemailer";
+import bcrypt from "bcrypt";
+import { DeliveryBoy } from "../models/deliveryBoyModel.js";
 
 
 // Pharmacist - Add new medicine
@@ -348,3 +351,118 @@ export const getCategoriesPratik = TryCatch(async (req, res) => {
     message: "Categories fetched successfully"
   });
 });
+
+
+const generateTempPassword = () => {
+  const length = 10;
+  const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$";
+  let password = "";
+  for (let i = 0; i < length; i++) {
+    password += charset.charAt(Math.floor(Math.random() * charset.length));
+  }
+  return password;
+};
+
+// Send email with credentials
+const sendCredentialsEmail = async (email, name, tempPassword) => {
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    secure: true,
+    auth: {
+      user: process.env.MY_GMAIL,
+      pass: process.env.MY_PASS,
+    },
+  });
+
+  await transporter.sendMail({
+    from: process.env.MY_GMAIL,
+    to: email,
+    subject: "Your Delivery Boy Account Credentials",
+    html: `
+      <h2>Welcome ${name}!</h2>
+      <p>Your delivery account has been created.</p>
+      <p><strong>Email:</strong> ${email}</p>
+      <p><strong>Temporary Password:</strong> ${tempPassword}</p>
+      <p><strong>Important:</strong> Please change your password after first login.</p>
+    `,
+  });
+};
+
+// CREATE DELIVERY BOY
+export const createDeliveryBoy = TryCatch(async (req, res) => {
+  const { name, email, mobile, vehicleType, vehicleNumber, location } = req.body;
+  const pharmacistId = req.user._id;
+
+  const pharmacist = await User.findById(pharmacistId);
+
+  if (!pharmacist || pharmacist.role !== "pharmacist") {
+    return res.status(403).json({
+      message: "Only pharmacists can create delivery boys",
+    });
+  }
+
+  if (!pharmacist.isVerifiedByAdmin) {
+    return res.status(403).json({
+      message: "Your account must be verified by admin",
+    });
+  }
+
+  const existingDeliveryBoy = await DeliveryBoy.findOne({
+    $or: [{ email }, { mobile }],
+  });
+
+  if (existingDeliveryBoy) {
+    return res.status(400).json({
+      message: "Email or mobile already exists",
+    });
+  }
+
+  const tempPassword = generateTempPassword();
+  const hashedPassword = await bcrypt.hash(tempPassword, 10);
+
+  const deliveryBoy = await DeliveryBoy.create({
+    name,
+    email,
+    mobile,
+    password: hashedPassword,
+    pharmacist: pharmacistId,
+    vehicleType,
+    vehicleNumber: vehicleNumber || "",
+    location: location || "",
+    isPasswordChanged: false,
+    isActive: true,
+  });
+
+  try {
+    await sendCredentialsEmail(email, name, tempPassword);
+  } catch (emailError) {
+    await DeliveryBoy.findByIdAndDelete(deliveryBoy._id);
+    return res.status(500).json({
+      message: "Failed to send email",
+    });
+  }
+
+  const deliveryBoyResponse = deliveryBoy.toObject();
+  delete deliveryBoyResponse.password;
+
+  res.status(201).json({
+    deliveryBoy: deliveryBoyResponse,
+    message: "Delivery boy created successfully",
+  });
+});
+
+// GET ALL DELIVERY BOYS
+export const getAllDeliveryBoys = TryCatch(async (req, res) => {
+  const pharmacistId = req.user._id;
+
+  const deliveryBoys = await DeliveryBoy.find({ pharmacist: pharmacistId })
+    .select("-password")
+    .sort({ createdAt: -1 });
+
+  res.json({
+    deliveryBoys,
+    total: deliveryBoys.length,
+    message: "Delivery boys fetched successfully",
+  });
+});
+

@@ -32,11 +32,7 @@ const orderSchema = new mongoose.Schema(
       address: { type: String, required: true }
     },
     items: [orderItemSchema],
-    totalAmount: {
-      type: Number,
-      required: true
-    },
-
+    
     shippingAddress: {
       flatNo: { type: String, required: true },
       street: { type: String, required: true },
@@ -47,7 +43,10 @@ const orderSchema = new mongoose.Schema(
       phone: { type: String, required: true }
     },
 
-    totalAmount: Number,
+    totalAmount: {
+      type: Number,
+      required: true
+    },
 
     paymentMethod: {
       type: String,
@@ -71,8 +70,15 @@ const orderSchema = new mongoose.Schema(
       public_id: String
     },
 
-    deliveryDate: Date,
-    notes: String
+    assignedDeliveryBoy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'DeliveryBoy',
+      default: null
+    },
+    notes: String,
+    pharmacistNotes: String,
+    deliveryDate: Date
+
   },
   { timestamps: true }
 );

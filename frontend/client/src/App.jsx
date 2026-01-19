@@ -8,6 +8,10 @@ import { Loading } from "./components/Loading";
 import Forgot from "./pages/Forgot";
 import Reset from "./pages/Reset";
 import OtpVerify from "./pages/OtpVerify";
+import { AdminData } from "./context/AdminContext";
+import AdminLogin from "./pages/AdminLogin";
+import AdminDashboard from "./pages/AdminDashboard";
+
 
 // Dhruv's pages
 import HomeDhruv from "./pages/Home.dhruv";
@@ -25,6 +29,13 @@ import MedicineDetailPratik from "./pages/MedicineDetail.pratik";
 import InventoryPratik from "./pages/Inventory.pratik";
 import OrdersPratik from "./pages/Orders.pratik";
 import OrderDetailPratik from "./pages/OrderDetail.pratik";
+import DeliveryBoys from "./pages/DeliveryBoys";
+import DeliveryBoyLogin from "./pages/DeliveryBoyLogin";
+import DeliveryBoyForgotPassword from "./pages/DeliveryBoyForgotPassword";
+import DeliveryBoyResetPassword from "./pages/DeliveryBoyResetPassword";
+import DeliveryBoyChangePassword from "./pages/DeliveryBoyChangePassword";
+import DeliveryBoyDashboard from "./DeliveryBoyDashboard";
+import PharmaCare from "./pages/HeroSection";
 import MyPrescriptions from "./pages/MyPrescriptions";
 import UploadPrescription from "./pages/UploadPrescription";
 import PharmacistDashboard from "./pages/PharmacistDashboard";
@@ -47,8 +58,12 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
 };
 
 const App = () => {
+  const { loading, isAuth, user} = UserData(); 
+  const { loading: adminLoading, isAdminAuth, admin } = AdminData();
+  console.log(isAuth);
+  
   // Original context for team routes
-  const { loading, isAuth, user } = UserData();
+  // const { loading, isAuth, user } = UserData();
 
   // Dhruv's context for customer portal routes
   const { loading: loadingDhruv, isAuth: isAuthDhruv } = UserDataDhruv();
@@ -71,6 +86,12 @@ const App = () => {
       ) : (
         <BrowserRouter>
           <Routes>
+            <Route path="/" element={<PharmaCare />} />          
+            
+            <Route path="/login" element={!isAuth ? <Login /> : getHomeRedirect()} />
+            <Route path="/verify/:token" element={!isAuth ? <OtpVerify /> : getHomeRedirect()} />
+            <Route path="/register" element={!isAuth ? <Register /> : getHomeRedirect()} />
+            <Route path="/forgot" element={!isAuth ? <Forgot /> : getHomeRedirect()} />
             {/* Main Routes */}
             <Route path="/" element={getHomeRedirect()} />
 
@@ -110,7 +131,16 @@ const App = () => {
                 </ProtectedRoute>
               }
             />
-            <Route
+            <Route 
+              path="/pharmacist/delivery-boys" 
+              element={
+                <ProtectedRoute allowedRoles={['pharmacist']}>
+                  <DeliveryBoys />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              
               path="/pharmacist/medicines.pratik"
               element={
                 <ProtectedRoute allowedRoles={["pharmacist"]}>
@@ -175,13 +205,53 @@ const App = () => {
               }
             />
             <Route
-              path="/pharmacist/order.pratik/:id"
+              path="/reset-password/:token"
+              element={<Reset />}
+            />
+            <Route 
+              path="/admin/login" 
+              element={isAdminAuth ? <AdminDashboard /> : <AdminLogin />} 
+            />
+            <Route 
+              path="/admin/dashboard" 
+              element={isAdminAuth ? <AdminDashboard /> : <AdminLogin />} 
+            />  
+
+            
+           
+            <Route 
+              path="/pharmacist/order.pratik/:id" 
+          
               element={
                 <ProtectedRoute allowedRoles={["pharmacist"]}>
                   <OrderDetailPratik />
                 </ProtectedRoute>
-              }
+              } 
             />
+              <Route
+                path="/delivery-boy/login"
+                element={<DeliveryBoyLogin />}
+              />
+              <Route
+                path="/delivery-boy/forgot-password"
+                element={<DeliveryBoyForgotPassword />}
+              />
+              <Route
+                path="/delivery-boy/reset-password/:token"
+                element={<DeliveryBoyResetPassword />}
+              />
+
+              {/* Delivery Boy Routes - Protected */}
+              <Route
+                path="/delivery-boy/change-password"
+                element={<DeliveryBoyChangePassword />}
+              />
+              <Route
+                path="/delivery-boy/dashboard"
+                element={<DeliveryBoyDashboard />}
+              />
+              
+           
 
             {/* Dhruv's Customer Portal Routes */}
             <Route

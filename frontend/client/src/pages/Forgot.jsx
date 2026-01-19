@@ -51,7 +51,7 @@ const Forgot = () => {
         variants={containerVariants}
       >
         <motion.h2 className='text-xl font-semibold text-center mb-2 text-[#055AF9]' variants={itemVariants}>
-          PROIMG
+          NexPharma
         </motion.h2>
         
         <motion.h2 className='text-2xl font-bold text-[#343838] text-center mb-6' variants={itemVariants}>

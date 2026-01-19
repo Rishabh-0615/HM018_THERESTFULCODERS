@@ -3,7 +3,7 @@ import Prescription from "../models/prescriptionModel.js";
 import Medicine from "../models/medicineModel.js";
 import TryCatch from "../utils/TryCatch.js";
 import cloudinary from "../utils/cloudinary.js";
-import Tesseract from "tesseract.js";
+// import Tesseract from "tesseract.js";
 import * as pdfParse from "pdf-parse";
 import fs from "fs";
 import OpenAI from "openai";
@@ -23,14 +23,14 @@ export const uploadPrescription = TryCatch(async (req, res) => {
   let extractedText = "";
   const fileType = req.file.mimetype;
 
-  if (fileType.includes("pdf")) {
-    const dataBuffer = fs.readFileSync(req.file.path);
-    const pdfData = await pdfParse(dataBuffer);
-    extractedText = pdfData.text;
-  } else if (fileType.includes("image")) {
-    const ocrResult = await Tesseract.recognize(req.file.path, "eng");
-    extractedText = ocrResult.data.text;
-  }
+  // if (fileType.includes("pdf")) {
+  //   const dataBuffer = fs.readFileSync(req.file.path);
+  //   const pdfData = await pdfParse(dataBuffer);
+  //   extractedText = pdfData.text;
+  // } else if (fileType.includes("image")) {
+  //   const ocrResult = await Tesseract.recognize(req.file.path, "eng");
+  //   extractedText = ocrResult.data.text;
+  // }
 
   // Generate LLM summary for pharmacist
   let summary = "Summary not available.";
