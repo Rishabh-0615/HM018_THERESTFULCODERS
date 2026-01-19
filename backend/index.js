@@ -65,7 +65,6 @@ const __dirname = path.resolve();
 const distPath = path.join(__dirname, '/frontend/client/dist');
 
 // Check if dist folder exists before serving static files
-import fs from 'fs';
 if (fs.existsSync(distPath)) {
   app.use(express.static(distPath));
 
