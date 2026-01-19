@@ -62,12 +62,18 @@ app.use('/api/orders', orderRoutesDhruv);
 
 // Serve static files from frontend build
 const __dirname = path.resolve();
-app.use(express.static(path.join(__dirname, '/frontend/client/dist')));
+const distPath = path.join(__dirname, '/frontend/client/dist');
 
-// Catch-all route to serve index.html for any non-API routes
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '/frontend/client/dist/index.html'));
-});
+// Check if dist folder exists before serving static files
+import fs from 'fs';
+if (fs.existsSync(distPath)) {
+  app.use(express.static(distPath));
+
+  // Catch-all route to serve index.html for any non-API routes
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(distPath, 'index.html'));
+  });
+}
 
 app.listen(port , ()=>{
     console.log(`Server is running on http://localhost:${port}`);
